@@ -1,6 +1,14 @@
-// SPDX-License-Identifier: Unlicensed 
+// SPDX-License-Identifier: Unlicensed
 
 pragma solidity >=0.8.4;
+
+struct Auths {
+    bool s;
+    bool m;
+    bool b;
+    bool i;
+}
+
 
 /* @notice Standard interface for a permit oracle to be used by a permissioned pool. */
 interface ICrocPermitOracle {
@@ -40,7 +48,7 @@ interface ICrocPermitOracle {
      * @param quote The quote-side token in the pair.
      * @param bidTick  The tick index of the lower side of the range (0 if ambient)
      * @param askTick  The tick index of the upper side of the range (0 if ambient)
-     * @param liq      The total amount of liquidity being minted. Denominated as 
+     * @param liq      The total amount of liquidity being minted. Denominated as
      *                 sqrt(X*Y)
      *
      * @returns       Returns true if action is permitted. If false, CrocSwap will revert
@@ -60,7 +68,7 @@ interface ICrocPermitOracle {
      * @param quote The quote-side token in the pair.
      * @param bidTick  The tick index of the lower side of the range (0 if ambient)
      * @param askTick  The tick index of the upper side of the range (0 if ambient)
-     * @param liq      The total amount of liquidity being minted. Denominated as 
+     * @param liq      The total amount of liquidity being minted. Denominated as
      *                 sqrt(X*Y)
      *
      * @returns       Returns true if action is permitted. If false, CrocSwap will revert

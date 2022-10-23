@@ -1,0 +1,31 @@
+// SPDX-License-Identifier: No License (None)
+pragma solidity ^0.8.17;
+
+/**
+ * EIP-712 typehashes library for CrocSwap
+ */
+library TypeHashes {
+    // Domain data
+    string constant name = "CrocSwap";
+    string constant version = "1";
+    uint256 constant chainID = 5;
+
+    // Domain typehash
+    bytes32 constant EIP712DOMAIN_TYPEHASH =
+        keccak256(
+            "EIP712Domain(string name,string version,uint256 chainId,address verifyingContract)"
+        );
+
+    // Domain typehash
+    bytes32 constant SETAUTHS_TYPEHASH =
+        keccak256(
+            "setAuth(address user, bool s, bool m, bool b, bool i)"
+        );
+
+        // Domain typehash
+    bytes32 constant SETBATCHAUTHS_TYPEHASH =
+        keccak256(
+            "setAuth(address[] user, bool[] s, bool[] m, bool[] b, bool[] i)"
+        );
+
+}

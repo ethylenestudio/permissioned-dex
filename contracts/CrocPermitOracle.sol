@@ -1,29 +1,52 @@
-// SPDX-License-Identifier: Unlicensed
-pragma solidity ^0.8.9;
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.13;
 
-import "./ICrocPermitOracle.sol";
-import "@openzeppelin/contracts/access/Ownable.sol";
+import "./Hasher712.sol";
+import "./utils/TypeHashes.sol";
+import "./interfaces/ICrocPermitOracle.sol";
 
-struct Auths {
-    bool s;
-    bool m;
-    bool b;
-    bool i;
-}
-
-contract CrocPermitOracle is ICrocPermitOracle, Ownable {
+contract CrocPermitOracle is ICrocPermitOracle, Hasher{
     mapping(address => Auths) public auths;
+    bytes32 public ownersHash;
 
-    function batchAuth(address[] memory user, Auths[] memory authList)
-        external
-        onlyOwner
-    {
-        for (uint256 i; i < user.length; i++) {
-            auths[user[i]] = authList[i];
-        }
+    constructor(address[5] memory _owners) {
+        ownersHash = keccak256(abi.encodePacked(_owners));
     }
 
-    function setAuth(address user, Auths memory auth) external onlyOwner {
+    // function batchAuth(
+    //     address[] memory signers,
+    //     uint8[] memory vs,
+    //     bytes32[] memory rs,
+    //     bytes32[] memory ss,
+    //     address[] memory user,
+    //     Auths[] memory authList
+    // )
+    //     external
+
+    // {
+    //     require(keccak256(abi.encodePacked(signers)) == ownersHash);
+
+    //     for (uint256 i; i < user.length; i++) {
+    //         auths[user[i]] = authList[i];
+
+    //     require(verify(signers, user, auth, vs, rs, ss), "Not auth!");
+    //     auths[user] = auth;
+    //     }
+    // }
+
+    function setAuth(
+        address[] memory signers,
+        uint8[] memory vs,
+        bytes32[] memory rs,
+        bytes32[] memory ss,
+        address user,
+        Auths memory auth
+    )
+        external
+    {
+        require(keccak256(abi.encodePacked(signers)) == ownersHash);
+        require(verifyAuth(signers, user, auth, vs, rs, ss), "Not auth!");
+
         auths[user] = auth;
     }
 
