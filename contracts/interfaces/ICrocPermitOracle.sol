@@ -9,13 +9,6 @@ struct Auths {
     bool i;
 }
 
-struct SignAuths {
-    address user;
-    bool s;
-    bool m;
-    bool b;
-    bool i;
-}
 
 
 /* @notice Standard interface for a permit oracle to be used by a permissioned pool. */

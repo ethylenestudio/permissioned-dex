@@ -200,8 +200,121 @@ describe("Lock", function () {
           ss
         );
       console.log(xd);
-      var result = await crocPermitOracle.auths("0x114B242D931B47D5cDcEe7AF065856f70ee278C4");
-      console.log(result)
+      var result = await crocPermitOracle.auths(
+        "0x114B242D931B47D5cDcEe7AF065856f70ee278C4"
+      );
+      console.log(result);
+    });
+
+    it("Should sign batch transactions", async function () {
+      const {
+        owner1,
+        owner2,
+        owner3,
+        owner4,
+        owner5,
+        signers,
+        crocPermitOracle,
+      } = await loadFixture(deployCrocPermitOracleFixture);
+
+      var vs = [];
+      var rs = [];
+      var ss = [];
+
+      const dataToBeSigned = {
+        types: {
+          setBatchAuth: [
+            { name: "root", type: "bytes32" }
+          ],
+        },
+        primaryType: "setBatchAuth",
+        domain: {
+          name: "CrocSwap",
+          version: "1",
+          chainId: 31337,
+          verifyingContract: crocPermitOracle.address,
+        },
+        message: {
+          root: "0x64dae981ca6f27a51acbce55511737d56ad44af76bbfb7197ea59da6b6506d60"
+        },
+      };
+
+      var signature = await owner1._signTypedData(
+        dataToBeSigned.domain,
+        dataToBeSigned.types,
+        dataToBeSigned.message
+      );
+      var { v, r, s } = ethers.utils.splitSignature(signature);
+      vs.push(v);
+      rs.push(r);
+      ss.push(s);
+
+      signature = await owner2._signTypedData(
+        dataToBeSigned.domain,
+        dataToBeSigned.types,
+        dataToBeSigned.message
+      );
+      var { v, r, s } = ethers.utils.splitSignature(signature);
+      vs.push(v);
+      rs.push(r);
+      ss.push(s);
+
+      signature = await owner3._signTypedData(
+        dataToBeSigned.domain,
+        dataToBeSigned.types,
+        dataToBeSigned.message
+      );
+      var { v, r, s } = ethers.utils.splitSignature(signature);
+      vs.push(v);
+      rs.push(r);
+      ss.push(s);
+
+      signature = await owner4._signTypedData(
+        dataToBeSigned.domain,
+        dataToBeSigned.types,
+        dataToBeSigned.message
+      );
+      var { v, r, s } = ethers.utils.splitSignature(signature);
+      vs.push(v);
+      rs.push(r);
+      ss.push(s);
+
+      signature = await owner5._signTypedData(
+        dataToBeSigned.domain,
+        dataToBeSigned.types,
+        dataToBeSigned.message
+      );
+      var { v, r, s } = ethers.utils.splitSignature(signature);
+      vs.push(v);
+      rs.push(r);
+      ss.push(s);
+
+      var auth = {
+        s: true,
+        m: true,
+        b: true,
+        i: true,
+      };
+      let batchAddresses = [
+        "0x114B242D931B47D5cDcEe7AF065856f70ee278C4",
+        "0x2F42323d90C29a53f8cC5ed2c85674E07fB252cd",
+      ];
+      let batchAuth = [true, true];
+
+      var xd = await crocPermitOracle
+        .connect(owner1)
+        .batchAuth(
+          ["0x4B20993Bc481177ec7E8f571ceCaE8A9e22C02db"],
+          [[true,true,true,true]],
+          signers,
+          vs,
+          rs,
+          ss
+        );
+        var result = await crocPermitOracle.auths(
+          "0x4B20993Bc481177ec7E8f571ceCaE8A9e22C02db"
+        );
+        console.log(result);
     });
   });
 });

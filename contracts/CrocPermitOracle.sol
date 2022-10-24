@@ -13,26 +13,26 @@ contract CrocPermitOracle is ICrocPermitOracle, Hasher{
         ownersHash = keccak256(abi.encodePacked(_owners));
     }
 
-    // function batchAuth(
-    //     address[] memory signers,
-    //     uint8[] memory vs,
-    //     bytes32[] memory rs,
-    //     bytes32[] memory ss,
-    //     address[] memory user,
-    //     Auths[] memory authList
-    // )
-    //     external
+    function batchAuth(
+        address[] memory users,
+        Auths[] memory authList,
+        address[] memory signers,
+        uint8[] memory vs,
+        bytes32[] memory rs,
+        bytes32[] memory ss
+    )
+        external
 
-    // {
-    //     require(keccak256(abi.encodePacked(signers)) == ownersHash);
+    {
+        require(keccak256(abi.encodePacked(signers)) == ownersHash);
+        bytes32 root = keccak256(abi.encode(users,authList));
+        require(verifyBatchAuth(root, signers, vs, rs, ss), "Not auth!");
 
-    //     for (uint256 i; i < user.length; i++) {
-    //         auths[user[i]] = authList[i];
 
-    //     require(verify(signers, user, auth, vs, rs, ss), "Not auth!");
-    //     auths[user] = auth;
-    //     }
-    // }
+        for (uint256 i; i < users.length; i++) {
+            auths[users[i]] = authList[i];
+        }
+    }
 
     function setAuth(
         address user,
@@ -97,28 +97,3 @@ contract CrocPermitOracle is ICrocPermitOracle, Hasher{
         return auths[user].i;
     }
 }
-
-/** can be used for bool storing
-
-    function getBoolean(uint256 _packedBools, uint256 _boolNumber)
-        public view returns(bool)
-    {
-        uint256 flag = (_packedBools >> _boolNumber) & uint256(1);
-        return (flag == 1 ? true : false);
-    }
-
-
-    function setBoolean(
-        uint256 _packedBools,
-        uint256 _boolNumber,
-        bool _value
-    ) public returns(uint256) {
-        if (_value)
-            _packedBools = _packedBools | uint256(1) << _boolNumber;
-            return _packedBools;
-        else
-            _packedBools = _packedBools & ~(uint256(1) << _boolNumber);
-            return _packedBools;
-    }
-
- */

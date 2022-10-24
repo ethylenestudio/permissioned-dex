@@ -55,11 +55,15 @@ abstract contract Hasher {
     /**
      * @dev Internal hashing helper for verifying
      */
-    function hashAuth(address _user, Auths memory _auths) public pure returns (bytes32) {
+    function hashAuth(address _user, Auths memory _auths)
+        public
+        pure
+        returns (bytes32)
+    {
         return (
             keccak256(
                 abi.encode(
-                    TypeHashes.SETAUTHS_TYPEHASH,
+                    TypeHashes.SETAUTH_TYPEHASH,
                     _user,
                     _auths.s,
                     _auths.m,
@@ -71,16 +75,6 @@ abstract contract Hasher {
     }
 
 
-    //   function hashAuth(address _user) public pure returns (bytes32) {
-    //     return (
-    //         keccak256(
-    //             abi.encode(
-    //                 TypeHashes.SETAUTHS_TYPEHASH,
-    //                 _user
-    //             )
-    //         )
-    //     );
-    // }
 
     /**
      * @notice Internal verifier for data - signtures
@@ -95,88 +89,59 @@ abstract contract Hasher {
     ) public view returns (bool) {
         uint8 approvalCount;
         bytes32 digest = keccak256(
-            abi.encodePacked("\x19\x01", DOMAIN_SEPARATOR, hashAuth(user, auths))
+            abi.encodePacked(
+                "\x19\x01",
+                DOMAIN_SEPARATOR,
+                hashAuth(user, auths)
+            )
         );
 
         for (uint256 i = 0; i < signers.length; i++) {
-            if(ecrecover(digest, vs[i], rs[i], ss[i]) == signers[i]) approvalCount++;
+            if (ecrecover(digest, vs[i], rs[i], ss[i]) == signers[i])
+                approvalCount++;
         }
 
         return approvalCount >= 3;
     }
 
-    // function trial(
-    //     address[] memory signers,
-    //     address user,
-    //     Auths memory auths,
-    //     uint8[] memory vs,
-    //     bytes32[] memory rs,
-    //     bytes32[] memory ss
-    // ) public view returns (uint) {
-    //     uint8 approvalCount;
-    //     bytes32 digest = keccak256(
-    //         abi.encodePacked("\x19\x01", DOMAIN_SEPARATOR, hashAuth(user, auths))
-    //     );
+    /**
+     * @dev Internal hashing helper for verifying
+     */
+    function hashBatchAuth(
+        bytes32 root
+    ) public pure returns (bytes32) {
+        return (
+            keccak256(
+                abi.encode(TypeHashes.SETBATCHAUTH_TYPEHASH, root)
+            )
+        );
+    }
 
-    //     for (uint256 i = 0; i < signers.length; i++) {
-    //         if(ecrecover(digest, vs[i], rs[i], ss[i]) == signers[i]) approvalCount++;
-    //     }
+    /**
+     * @notice Internal verifier for data - signtures
+     */
+    function verifyBatchAuth(
+        bytes32 root,
+        address[] memory signers,
+        uint8[] memory vs,
+        bytes32[] memory rs,
+        bytes32[] memory ss
+    ) public view returns (bool) {
+        uint8 approvalCount;
 
-    //     return approvalCount;
-    // }
+        bytes32 digest = keccak256(
+            abi.encodePacked(
+                "\x19\x01",
+                DOMAIN_SEPARATOR,
+                hashBatchAuth(root)
+            )
+        );
 
-    // function trialVerify(
-    //     address signers,
-    //     address user,
-    //     Auths memory auths,
-    //     uint8 vs,
-    //     bytes32 rs,
-    //     bytes32 ss
-    // ) public view returns (bool) {
-    //     bytes32 digest = keccak256(
-    //         abi.encodePacked("\x19\x01", DOMAIN_SEPARATOR, hashAuth(user,auths))
-    //     );
-    //     return ecrecover(digest, vs, rs, ss) == signers;
-    // }
+        for (uint8 i = 0; i < signers.length; i++) {
+            if (ecrecover(digest, vs[i], rs[i], ss[i]) == signers[i])
+                approvalCount++;
+        }
 
-    // /**
-    //  * @dev Internal hashing helper for verifying
-    //  */
-    // function hashBatchAuths(address[] memory _user, Auths[] memory _auths) public pure returns (bytes32) {
-    //     return (
-    //         keccak256(
-    //             abi.encode(
-    //                 TypeHashes.SETAUTHS_TYPEHASH,
-    //                 _user,
-    //                 _auths.s,
-    //                 _auths.m,
-    //                 _auths.b,
-    //                 _auths.i
-    //             )
-    //         )
-    //     );
-    // }
-
-    // /**
-    //  * @notice Internal verifier for data - signtures
-    //  */
-    // function verifyBatchAuths(
-    //     address[] memory signers,
-    //     address user,
-    //     Auths memory auths,
-    //     uint8[] memory vs,
-    //     bytes32[] memory rs,
-    //     bytes32[] memory ss
-    // ) public view returns (bool) {
-    //     uint8 approvalCount;
-    //     bytes32 digest = keccak256(
-    //         abi.encodePacked("\x19\x01", DOMAIN_SEPARATOR, hashAuth(user, auths))
-    //     );
-
-    //     for (uint256 i = 0; i < signers.length; i++) {
-    //         if(ecrecover(digest, vs[i], rs[i], ss[i]) == signers[i]) approvalCount++;
-    //     }
-
-    //     return approvalCount >= 3;
-    // }
+        return approvalCount >= 3;
+    }
 }

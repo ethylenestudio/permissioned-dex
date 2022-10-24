@@ -17,7 +17,7 @@ library TypeHashes {
         );
 
     // Domain typehash
-    bytes32 constant SETAUTHS_TYPEHASH =
+    bytes32 constant SETAUTH_TYPEHASH =
         keccak256(
             "setAuth(address user,bool s,bool m,bool b,bool i)"
         );
@@ -25,9 +25,9 @@ library TypeHashes {
 
 
         // Domain typehash
-    bytes32 constant SETBATCHAUTHS_TYPEHASH =
+    bytes32 constant SETBATCHAUTH_TYPEHASH =
         keccak256(
-            "setAuth(address[] user,bool[] s,bool[] m,bool[] b,bool[] i)"
+            "setBatchAuth(bytes32 root)"
         );
 
 }
