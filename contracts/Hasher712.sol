@@ -14,7 +14,7 @@ struct EIP712Domain {
 /**
  * @notice Abstract contract to be used in Marketplace contract as EIP-712 helper
  */
-abstract contract Hasher  {
+abstract contract Hasher {
     // EIP-712 domain seperator
     bytes32 internal immutable DOMAIN_SEPARATOR;
 
@@ -70,13 +70,25 @@ abstract contract Hasher  {
         );
     }
 
+
+    //   function hashAuth(address _user) public pure returns (bytes32) {
+    //     return (
+    //         keccak256(
+    //             abi.encode(
+    //                 TypeHashes.SETAUTHS_TYPEHASH,
+    //                 _user
+    //             )
+    //         )
+    //     );
+    // }
+
     /**
      * @notice Internal verifier for data - signtures
      */
     function verifyAuth(
-        address[] memory signers,
         address user,
         Auths memory auths,
+        address[] memory signers,
         uint8[] memory vs,
         bytes32[] memory rs,
         bytes32[] memory ss
@@ -93,6 +105,39 @@ abstract contract Hasher  {
         return approvalCount >= 3;
     }
 
+    // function trial(
+    //     address[] memory signers,
+    //     address user,
+    //     Auths memory auths,
+    //     uint8[] memory vs,
+    //     bytes32[] memory rs,
+    //     bytes32[] memory ss
+    // ) public view returns (uint) {
+    //     uint8 approvalCount;
+    //     bytes32 digest = keccak256(
+    //         abi.encodePacked("\x19\x01", DOMAIN_SEPARATOR, hashAuth(user, auths))
+    //     );
+
+    //     for (uint256 i = 0; i < signers.length; i++) {
+    //         if(ecrecover(digest, vs[i], rs[i], ss[i]) == signers[i]) approvalCount++;
+    //     }
+
+    //     return approvalCount;
+    // }
+
+    // function trialVerify(
+    //     address signers,
+    //     address user,
+    //     Auths memory auths,
+    //     uint8 vs,
+    //     bytes32 rs,
+    //     bytes32 ss
+    // ) public view returns (bool) {
+    //     bytes32 digest = keccak256(
+    //         abi.encodePacked("\x19\x01", DOMAIN_SEPARATOR, hashAuth(user,auths))
+    //     );
+    //     return ecrecover(digest, vs, rs, ss) == signers;
+    // }
 
     // /**
     //  * @dev Internal hashing helper for verifying

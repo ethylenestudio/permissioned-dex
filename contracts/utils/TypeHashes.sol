@@ -8,7 +8,7 @@ library TypeHashes {
     // Domain data
     string constant name = "CrocSwap";
     string constant version = "1";
-    uint256 constant chainID = 5;
+    uint256 constant chainID = 31337;
 
     // Domain typehash
     bytes32 constant EIP712DOMAIN_TYPEHASH =
@@ -19,13 +19,15 @@ library TypeHashes {
     // Domain typehash
     bytes32 constant SETAUTHS_TYPEHASH =
         keccak256(
-            "setAuth(address user, bool s, bool m, bool b, bool i)"
+            "setAuth(address user,bool s,bool m,bool b,bool i)"
         );
+
+
 
         // Domain typehash
     bytes32 constant SETBATCHAUTHS_TYPEHASH =
         keccak256(
-            "setAuth(address[] user, bool[] s, bool[] m, bool[] b, bool[] i)"
+            "setAuth(address[] user,bool[] s,bool[] m,bool[] b,bool[] i)"
         );
 
 }

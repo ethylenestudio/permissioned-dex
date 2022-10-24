@@ -35,17 +35,17 @@ contract CrocPermitOracle is ICrocPermitOracle, Hasher{
     // }
 
     function setAuth(
+        address user,
+        Auths memory auth,
         address[] memory signers,
         uint8[] memory vs,
         bytes32[] memory rs,
-        bytes32[] memory ss,
-        address user,
-        Auths memory auth
+        bytes32[] memory ss
     )
         external
     {
         require(keccak256(abi.encodePacked(signers)) == ownersHash);
-        require(verifyAuth(signers, user, auth, vs, rs, ss), "Not auth!");
+        require(verifyAuth( user, auth,signers, vs, rs, ss), "Not auth!");
 
         auths[user] = auth;
     }
