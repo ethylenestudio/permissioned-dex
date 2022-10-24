@@ -295,6 +295,10 @@ describe("Lock", function () {
         b: true,
         i: true,
       };
+
+      const abi = ethers.utils.defaultAbiCoder;
+      const abiEncode = abi.encode(["uint256[]"],[[1,2]]);
+      console.log(abiEncode)
       let batchAddresses = [
         "0x114B242D931B47D5cDcEe7AF065856f70ee278C4",
         "0x2F42323d90C29a53f8cC5ed2c85674E07fB252cd",
@@ -314,7 +318,7 @@ describe("Lock", function () {
         var result = await crocPermitOracle.auths(
           "0x4B20993Bc481177ec7E8f571ceCaE8A9e22C02db"
         );
-        console.log(result);
+        // console.log(result);
     });
   });
 });
